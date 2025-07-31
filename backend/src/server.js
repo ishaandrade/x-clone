@@ -1,7 +1,22 @@
 import express from "express";
+import { ENV } from "./config/env.js";
+import { connectDB } from "./config/db.js";
 
 const app = express();
 
-app.listen(8080, () => {
-    console.log("Server is up and running on PORT: 8080")
-});
+const startServer = async () => {
+  try {
+    await connectDB();
+
+    app.get("/", (req, res) => res.send("Hello from server (～￣▽￣)～"))
+
+    app.listen(ENV.PORT, () => {
+        console.log("Server is up and running on PORT:", ENV.PORT)
+    });
+  } catch (error) {
+    console.error("Failed to start server:", error.message);
+    process.exit(1);
+  }  
+};
+
+startServer();
